@@ -1,20 +1,22 @@
-package com.frederico.coupon.interfaces.rest.coupon;
+package com.frederico.coupon.interfaces.rest;
 
 import com.frederico.coupon.application.coupon.CreateCouponCommand;
 import com.frederico.coupon.application.coupon.CreateCouponUseCase;
+import com.frederico.coupon.application.coupon.GetCouponUseCase;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/coupon")
+@RequiredArgsConstructor
 public class CouponController {
 
     private final CreateCouponUseCase createCouponUseCase;
-
-    public CouponController(CreateCouponUseCase createCouponUseCase) {
-        this.createCouponUseCase = createCouponUseCase;
-    }
+    private final GetCouponUseCase getCouponUseCase;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -30,6 +32,13 @@ public class CouponController {
         );
 
         var coupon = createCouponUseCase.execute(command);
+
+        return CouponResponse.fromDomain(coupon);
+    }
+
+    @GetMapping("/{id}")
+    public CouponResponse getById(@PathVariable UUID id) {
+        var coupon = getCouponUseCase.execute(id);
 
         return CouponResponse.fromDomain(coupon);
     }

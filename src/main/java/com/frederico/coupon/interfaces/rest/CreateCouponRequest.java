@@ -1,4 +1,4 @@
-package com.frederico.coupon.interfaces.rest.coupon;
+package com.frederico.coupon.interfaces.rest;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

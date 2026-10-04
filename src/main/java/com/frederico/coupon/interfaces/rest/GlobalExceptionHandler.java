@@ -1,5 +1,7 @@
-package com.frederico.coupon.domain.coupon.exception;
+package com.frederico.coupon.interfaces.rest;
 
+import com.frederico.coupon.domain.coupon.exception.CouponNotFoundException;
+import com.frederico.coupon.domain.coupon.exception.InvalidCouponException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -18,5 +20,13 @@ public class GlobalExceptionHandler {
         return Map.of(
                 "message", exception.getMessage()
         );
+    }
+
+    @ExceptionHandler(CouponNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> handleCouponNotFoundException(
+            CouponNotFoundException exception
+    ) {
+        return Map.of("message", exception.getMessage());
     }
 }

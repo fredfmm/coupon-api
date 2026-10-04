@@ -1,4 +1,4 @@
-package com.frederico.coupon.interfaces.rest.coupon;
+package com.frederico.coupon.interfaces.rest;
 
 import com.frederico.coupon.domain.coupon.CouponStatus;
 import com.frederico.coupon.infrastructure.persistence.coupon.CouponJpaRepository;
