@@ -1,9 +1,13 @@
 package com.frederico.coupon.application.coupon;
 
+import java.math.BigDecimal;
+import java.time.Instant;
 
-import com.frederico.coupon.domain.coupon.Coupon;
-
-public interface CreateCouponCommand {
-
-    Coupon execute(CreateCouponCommand command);
+public record CreateCouponCommand(
+        String code,
+        String description,
+        BigDecimal discountValue,
+        Instant expirationDate,
+        boolean published
+) {
 }
