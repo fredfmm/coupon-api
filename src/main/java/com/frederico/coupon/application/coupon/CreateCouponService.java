@@ -15,6 +15,14 @@ public class CreateCouponService implements CreateCouponUseCase {
 
     @Override
     public Coupon execute(CreateCouponCommand command) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        var coupon = Coupon.create(
+                command.code(),
+                command.description(),
+                command.discountValue(),
+                command.expirationDate(),
+                command.published()
+        );
+
+        return couponRepository.save(coupon);
     }
 }

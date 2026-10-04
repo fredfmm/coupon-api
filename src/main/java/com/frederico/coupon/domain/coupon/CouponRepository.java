@@ -1,6 +1,5 @@
 package com.frederico.coupon.domain.coupon;
 
-
 import java.util.Optional;
 import java.util.UUID;
 
