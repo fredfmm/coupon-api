@@ -1,7 +1,9 @@
 package com.frederico.coupon.domain.coupon;
 
 
-public class CouponStatus {
+public enum CouponStatus {
 
-
+    ACTIVE,
+    INACTIVE,
+    DELETED
 }
