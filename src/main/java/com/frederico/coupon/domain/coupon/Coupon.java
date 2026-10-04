@@ -3,11 +3,13 @@ package com.frederico.coupon.domain.coupon;
 import com.frederico.coupon.domain.coupon.exception.CouponAlreadyDeletedException;
 import com.frederico.coupon.domain.coupon.exception.InvalidCouponCodeException;
 import com.frederico.coupon.domain.coupon.exception.InvalidCouponException;
+import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
+@Getter
 public class Coupon {
 
     private static final int CODE_LENGTH = 6;
@@ -29,18 +31,18 @@ public class Coupon {
             String description,
             BigDecimal discountValue,
             Instant expirationDate,
-            boolean published
+            CouponStatus status,
+            boolean published,
+            boolean redeemed
     ) {
         this.id = id;
         this.code = code;
         this.description = description;
         this.discountValue = discountValue;
         this.expirationDate = expirationDate;
+        this.status = status;
         this.published = published;
-        this.redeemed = false;
-        this.status = published
-                ? CouponStatus.ACTIVE
-                : CouponStatus.INACTIVE;
+        this.redeemed = redeemed;
     }
 
     public static Coupon create(
@@ -62,7 +64,31 @@ public class Coupon {
                 description,
                 discountValue,
                 expirationDate,
-                published
+                published ? CouponStatus.ACTIVE : CouponStatus.INACTIVE,
+                published,
+                false
+        );
+    }
+
+    public static Coupon restore(
+            UUID id,
+            String code,
+            String description,
+            BigDecimal discountValue,
+            Instant expirationDate,
+            CouponStatus status,
+            boolean published,
+            boolean redeemed
+    ) {
+        return new Coupon(
+                id,
+                code,
+                description,
+                discountValue,
+                expirationDate,
+                status,
+                published,
+                redeemed
         );
     }
 
@@ -128,37 +154,5 @@ public class Coupon {
                     "Expiration date cannot be in the past"
             );
         }
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public BigDecimal getDiscountValue() {
-        return discountValue;
-    }
-
-    public Instant getExpirationDate() {
-        return expirationDate;
-    }
-
-    public CouponStatus getStatus() {
-        return status;
-    }
-
-    public boolean isPublished() {
-        return published;
-    }
-
-    public boolean isRedeemed() {
-        return redeemed;
     }
 }
