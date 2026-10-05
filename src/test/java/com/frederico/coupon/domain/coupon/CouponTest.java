@@ -165,4 +165,64 @@ class CouponTest {
 				published
 		);
 	}
+
+	@Test
+	void shouldRejectNullCode() {
+		assertThatThrownBy(() ->
+				Coupon.create(
+						null,
+						"Test coupon",
+						new BigDecimal("10.00"),
+						Instant.now().plusSeconds(3600),
+						false
+				)
+		)
+				.isInstanceOf(InvalidCouponCodeException.class)
+				.hasMessage("Coupon code is required");
+	}
+
+	@Test
+	void shouldRejectNullDescription() {
+		assertThatThrownBy(() ->
+				Coupon.create(
+						"ABC123",
+						null,
+						new BigDecimal("10.00"),
+						Instant.now().plusSeconds(3600),
+						false
+				)
+		)
+				.isInstanceOf(InvalidCouponException.class)
+				.hasMessage("Coupon description is required");
+	}
+
+	@Test
+	void shouldRejectNullDiscount() {
+		assertThatThrownBy(() ->
+				Coupon.create(
+						"ABC123",
+						"Test coupon",
+						null,
+						Instant.now().plusSeconds(3600),
+						false
+				)
+		)
+				.isInstanceOf(InvalidCouponException.class)
+				.hasMessage("Discount value is required");
+	}
+
+	@Test
+	void shouldRejectNullExpirationDate() {
+		assertThatThrownBy(() ->
+				Coupon.create(
+						"ABC123",
+						"Test coupon",
+						new BigDecimal("10.00"),
+						null,
+						false
+				)
+		)
+				.isInstanceOf(InvalidCouponException.class)
+				.hasMessage("Expiration date is required");
+	}
 }

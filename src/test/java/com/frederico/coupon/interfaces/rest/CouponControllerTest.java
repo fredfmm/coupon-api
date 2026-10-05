@@ -2,6 +2,7 @@ package com.frederico.coupon.interfaces.rest;
 
 import com.frederico.coupon.application.coupon.CreateCouponUseCase;
 import com.frederico.coupon.application.coupon.GetCouponUseCase;
+import com.frederico.coupon.application.coupon.DeleteCouponUseCase;
 import com.frederico.coupon.domain.coupon.Coupon;
 import com.frederico.coupon.domain.coupon.CouponStatus;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -25,11 +27,15 @@ class CouponControllerTest {
 	private final GetCouponUseCase getCouponUseCase =
 			mock(GetCouponUseCase.class);
 
+	private final DeleteCouponUseCase deleteCouponUseCase =
+			mock(DeleteCouponUseCase.class);
+
 	private final MockMvc mockMvc = MockMvcBuilders
 			.standaloneSetup(
 					new CouponController(
 							createCouponUseCase,
-							getCouponUseCase
+							getCouponUseCase,
+							deleteCouponUseCase
 					)
 			)
 			.build();
@@ -68,5 +74,45 @@ class CouponControllerTest {
 				.andExpect(jsonPath("$.redeemed").value(false));
 
 		verify(getCouponUseCase).execute(id);
+	}
+
+	@Test
+	void shouldReturnBadRequestWhenIdIsInvalid() throws Exception {
+
+		mockMvc.perform(
+						get("/coupon/{id}", "invalid-uuid")
+				)
+				.andExpect(status().isBadRequest());
+
+		verifyNoInteractions(getCouponUseCase);
+	}
+
+	@Test
+	void shouldDeleteCoupon() throws Exception {
+
+		var id = UUID.randomUUID();
+
+		doNothing()
+				.when(deleteCouponUseCase)
+				.execute(id);
+
+		mockMvc.perform(
+						delete("/coupon/{id}", id)
+								.contentType(MediaType.APPLICATION_JSON)
+				)
+				.andExpect(status().isNoContent());
+
+		verify(deleteCouponUseCase).execute(id);
+	}
+
+	@Test
+	void shouldReturnBadRequestWhenDeleteIdIsInvalid() throws Exception {
+
+		mockMvc.perform(
+						delete("/coupon/{id}", "invalid-uuid")
+				)
+				.andExpect(status().isBadRequest());
+
+		verifyNoInteractions(deleteCouponUseCase);
 	}
 }
